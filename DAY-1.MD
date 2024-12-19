@@ -114,7 +114,7 @@ Docker architecture
 
 
 
-1. Docker Engine
+ 1. Docker Engine
 -----------------
 Docker Engine is the core component of Docker, responsible for building, running, and managing containers. It has two main parts:
 
@@ -122,7 +122,7 @@ Docker Daemon (dockerd): This is the background service that manages Docker cont
 
 The Docker Daemon listens for Docker API requests and can communicate with other Docker Daemons to manage containers across multiple hosts.
 
-2.Docker CLI (docker):
+ 2.Docker CLI (docker):
 ---------------------
 The Docker Command Line Interface (CLI) is the tool used by developers and administrators to interact with the Docker Daemon. Commands like docker run, docker build, and docker ps are executed via the CLI to manage containers and images.
 
@@ -149,7 +149,7 @@ NOTE: Registry contains collection of repositories.
 
 we can manage these docker registry's by our self like nexus, Jfrog etc
 
-Managed docker registories
+ Managed docker registories
 ===========================
 ECR --> Elastic container registry(AWS)
 ACR --> Azure container registry(Azure)
