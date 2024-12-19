@@ -111,7 +111,7 @@ docker ps # As a normal user also can run the docker commands.
 
 Docker architecture
 ===================
-
+![image alt](https://github.com/kkeducation12345/docker-running-notes/blob/main/docker-architecture.webp)
 
 
  1. Docker Engine
