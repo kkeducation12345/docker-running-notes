@@ -109,4 +109,53 @@ step 7: docker ps # eventhough we added we are getting permission denied.
 docker ps # As a normal user also can run the docker commands.
 
 
+Docker architecture
+===================
+
+
+
+1. Docker Engine
+-----------------
+Docker Engine is the core component of Docker, responsible for building, running, and managing containers. It has two main parts:
+
+Docker Daemon (dockerd): This is the background service that manages Docker containers and images. It handles container orchestration, image management, and network configuration. 
+
+The Docker Daemon listens for Docker API requests and can communicate with other Docker Daemons to manage containers across multiple hosts.
+
+2.Docker CLI (docker):
+---------------------
+The Docker Command Line Interface (CLI) is the tool used by developers and administrators to interact with the Docker Daemon. Commands like docker run, docker build, and docker ps are executed via the CLI to manage containers and images.
+
+3. Docker Images
+-----------------
+Description: Docker images are the blueprints for Docker containers. They contain the application code, libraries, dependencies, and the runtime environment needed to run a specific application. Images are immutable and can be versioned and shared.
+
+Layers: Docker images are built in layers. Each layer represents a set of changes or instructions in the image's Dockerfile. Layers are cached and reused, which helps in optimizing storage and build times.
+
+4. Docker Containers
+---------------------
+Description: Containers are instances of Docker images. They are lightweight, portable, and run the application in isolation from the host system and other containers. Each container has its own filesystem, network stack, and process space.
+
+Isolation: Containers use operating system-level virtualization to provide isolation. They share the host OS kernel but run in separate user spaces.
+
+5. Docker Registry
+------------------
+Description: A Docker Registry is a storage and distribution system for Docker images. Docker Hub is the default public registry provided by Docker. There are also private registries, such as Docker Registry (open-source), or enterprise solutions like Docker Trusted Registry.
+
+Operations: Registries handle pushing and pulling of images. When you build an image, you can push it to a registry so that it can be shared with others or used in different environments. Conversely, you can pull images from a registry to deploy them on into different environment.
+
+
+NOTE: Registry contains collection of repositories.
+
+we can manage these docker registry's by our self like nexus, Jfrog etc
+
+Managed docker registories
+===========================
+ECR --> Elastic container registry(AWS)
+ACR --> Azure container registry(Azure)
+GCR --> Google container registry(GCP)
+
+Docker repository --> we can maintain(Store) docker image with same name with different 		      tag(version)
+
+
 
