@@ -19,42 +19,42 @@ docker objects
 
 step 1: create a account in a docker hub
 
-```
+
 https://app.docker.com/signup
-```
+
 
 step 2: docker pull <imageName>:version
     
-      ```docker pull tomcat
+      docker pull tomcat
          docker pull centos
          docker pull jenkins/jenkins:lts
-      ```
+      
 
 
 step 3: List the images
 
-   ```  docker images 
+     docker images 
       
         or 
   
        docker image ls
-```
+
 
 step 4: How to login to docker hub from CLI
 
 
-``` docker login -u kkeducation123456 -p password
+ docker login -u kkeducation123456 -p password
 
        or
 docker login -u kkeducation123456 # press enter it will ask password
-```
 
 
-``` docker logout ```
+
+ docker logout 
 
 
-``` docker rmi tomcat # delete the image
-```
+ docker rmi tomcat # delete the image
+
 
 step 5: How to build an image ; pls make sure to write a docker file
 
