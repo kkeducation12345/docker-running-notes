@@ -26,7 +26,7 @@ What is Docker volume?
 
 2. volumes
   (i) local volumes
-  (ii) network volumes
+  (ii) network volumes [NFS,EBS,S3]
 
 
 LAB
@@ -77,7 +77,7 @@ docker images
 step 6: create a docker custom bridge network
 -------
 
-NOTE: Developers are using the DB name for communication instead of IP , so we need to create a network.
+NOTE: Developers are using the DB name for communication instead of IP of container , so we need to create a custom bridge network.
 
 docker network create jio
 
@@ -87,7 +87,7 @@ docker network ls
 step 7: create a container
 -------
 
-docker run -d --name springapp --network jio -p 8080:8080 -e MONGO_DB_HOSTNAME=mongo -e MONGO_DB_USERNAME=devdb -e MONGO_DB_PASSWORD=dev@123 kkeducationb2/springimage
+docker run -d --name springapp --network jio -p 8080:8080 -e MONGO_DB_HOSTNAME=mongo -e MONGO_DB_USERNAME=devdb -e MONGO_DB_PASSWORD=dev@123 kkeducationb2/springapp
 
 NOTE: Tomcat is not there why we are using -p ? .... In springboot framework by default tomcat is installed.
 
@@ -102,7 +102,10 @@ NOTE: As of now we are not created the mongo db, so data will not be stored
 step 9: start the mongodb container
 -------
 
-docker run -d --name mongo -v ~/mongobackup:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+docker run -d --name mongo --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+
+
 
 --> Now you can insert the data
 
@@ -119,6 +122,7 @@ show databases;
 
 use users;
 
+
 db.users.find();
 
 
@@ -132,11 +136,12 @@ step 11: see the default location of mongo
 
 step 12: 
 
+
 delete the application container and recreate app, the data is available.
 
 step 13:
 
-delete the db(mongo) container and recreate adb(mongo), the data is not available.
+delete the db(mongo) container and recreate a db(mongo), the data is not available.
 
 That is the reason we need volumes, clear right
 
@@ -147,11 +152,11 @@ That is the reason we need volumes, clear right
 volume types
 =============
 
-1. Bind mount
+1. Bind mount (Host mount)
 
 2. Docker volumes
    (i) local volumes
-   (ii) network volumes
+   (ii) network volumes [AWS]
 
 what is bind mount?
 ===================
@@ -175,7 +180,8 @@ step 1: remove the mongodb container
 step 2: Then create a mongo DB container
 -------
 
-docker run -d --name mongo -v /home/ubuntu/spring-boot-mongo-docker-kkfunda/bkp:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+docker run -d --name mongo -v /home/ubuntu/spring-boot-mongo-docker-kkfunda/mongobkp:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
 
 insert some data
 
@@ -209,7 +215,7 @@ docker volume ls
 How to remove a volume?
 -----------------------
 
-docker volume prune
+docker volume prune --> This will remove anonymous local volumes not used by at least one container.
 
 Where all the volumes are stored?
 ---------------------------------
