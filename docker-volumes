@@ -1,0 +1,283 @@
+Docker volumes
+==============
+
+--> docker Networks are used for container communication, Docker volumes are used for storage.
+
+Before Docker volumes
+=====================
+--> Diagram
+
+--> Before docker volumes we can store the data in the docker container file system, But If my container crashed or removed then our data will be lossed
+
+--> To overcome this problem we are going for a docker volumes
+
+
+What is Docker volume?
+=======================
+
+--> Containers are usually temporary; when they stop or restart, any data inside them is lost.
+
+--> Volumes allow you to store data outside the container, so it persists even after the container is gone.
+
+
+1. Bind mount
+-------------
+  By using bind mount we can store data in the server file system, Eventhough our container crashed, we will recover the data.
+
+2. volumes
+  (i) local volumes
+  (ii) network volumes
+
+
+LAB
+===
+step 1: fork the spring-boot-mongo-docker-kkfunda project into your account
+-------
+
+   url: https://github.com/kkeducation12345/spring-boot-mongo-docker-kkfunda.git
+
+step 2: clone the project 
+-------
+git clone https://github.com/kkeducation12345/spring-boot-mongo-docker-kkfunda.git
+
+cd spring-boot-mongo-docker-kkfunda
+
+step 3: see the docker file "cat Dockerfile"
+-------
+
+FROM openjdk:8-alpine
+
+# Required for starting application up.
+RUN apk update && apk add /bin/sh
+
+RUN mkdir -p /opt/app
+ENV PROJECT_HOME /opt/app
+
+COPY target/spring-boot-mongo-1.0.jar $PROJECT_HOME/spring-boot-mongo.jar
+
+WORKDIR $PROJECT_HOME
+EXPOSE 8080
+CMD ["java" ,"-jar","./spring-boot-mongo.jar"]
+
+
+step 4: Build the arifact
+-------
+
+NOTE: make sure to install maven "sudo apt install maven"
+
+mvn clean package
+
+step 5: Build an image
+-------
+
+docker build -t kkeducationb2/springimage .
+
+docker images
+
+step 6: create a docker custom bridge network
+-------
+
+NOTE: Developers are using the DB name for communication instead of IP , so we need to create a network.
+
+docker network create jio
+
+docker network ls
+
+
+step 7: create a container
+-------
+
+docker run -d --name springapp --network jio -p 8080:8080 -e MONGO_DB_HOSTNAME=mongo -e MONGO_DB_USERNAME=devdb -e MONGO_DB_PASSWORD=dev@123 kkeducationb2/springimage
+
+NOTE: Tomcat is not there why we are using -p ? .... In springboot framework by default tomcat is installed.
+
+
+step 8: access the application
+-------
+
+http://IP:8080
+
+NOTE: As of now we are not created the mongo db, so data will not be stored
+
+step 9: start the mongodb container
+-------
+
+docker run -d --name mongo -v ~/mongobackup:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+--> Now you can insert the data
+
+step 10: check the user info in the mongo db
+--------
+
+ps -ef --> mongodb process is running 
+
+docker exec -it <container_name_or_id> bash
+
+mongosh --host localhost:27017 -u devdb -p dev@123
+
+show databases;
+
+use users;
+
+db.users.find();
+
+
+IQ] what is stateless app and statefull app?
+
+
+step 11: see the default location of mongo
+
+ docker exec mongo ls /data/db
+
+
+step 12: 
+
+delete the application container and recreate app, the data is available.
+
+step 13:
+
+delete the db(mongo) container and recreate adb(mongo), the data is not available.
+
+That is the reason we need volumes, clear right
+
+
+====================================================================
+
+
+volume types
+=============
+
+1. Bind mount
+
+2. Docker volumes
+   (i) local volumes
+   (ii) network volumes
+
+what is bind mount?
+===================
+
+It is file or directory in the host system(docker server) is mapped with container file system.
+
+
+NOTE: if you want to map host file system with container file system, we are using the option "-v"
+
+IQ] My conatiner is in running state , Is it possible to map the volume to that conatiner?
+
+ANS: port mapping and volume mapping not possible for running containers.
+
+
+LAB
+===
+
+step 1: remove the mongodb container
+-------
+
+step 2: Then create a mongo DB container
+-------
+
+docker run -d --name mongo -v /home/ubuntu/spring-boot-mongo-docker-kkfunda/bkp:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+insert some data
+
+step 3: Recreate the mongo db container
+-------
+
+docker run -d --name mongo -v /home/ubuntu/spring-boot-mongo-docker-kkfunda/bkp:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+
+Assignment: run the jenkins as a container and create a job check the volumes concept
+
+
+=====================================================================================
+
+
+IQ] Why we are going for Docker volumes insted of bind mount?
+
+we taken backup for every container into different folders, There is no central place for backup, so we are going for docker volume concept.
+
+
+IQ] How can you migrate docker from one server to another server?
+
+create a zip file of /var/lib/docker and move that to another server.
+
+
+How to list the volumes?
+------------------------
+docker volume ls
+
+
+How to remove a volume?
+-----------------------
+
+docker volume prune
+
+Where all the volumes are stored?
+---------------------------------
+
+sudo ls -lrth /var/lib/docker
+
+
+How to create a volume?
+-----------------------
+
+docker volume create -d local jiovolume
+
+docker volume ls
+
+
+How to create a conatiner with volumes?
+---------------------------------------
+
+docker run -d --name springapp --network jio -p 8080:8080 -e MONGO_DB_HOSTNAME=mongo -e MONGO_DB_USERNAME=devdb -e MONGO_DB_PASSWORD=dev@123 kkeducationb2/springimage
+
+docker run -d --name mongo -v jiovolume:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+
+How to inspect the volume?
+--------------------------
+
+docker inspect <vol-name>
+
+
+For verifcation
+---------------
+
+delete the mongo db container and recreate, data is available
+
+
+
+========================================================
+
+
+NOTE: external(network) volumes we will discuss in AWS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
