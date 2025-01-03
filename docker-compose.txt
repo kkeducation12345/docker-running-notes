@@ -1,0 +1,108 @@
+docker compose
+===============
+
+--> Docker-compose is a tool, Used to define and run the multi container docker applications.
+
+--> IT is in YAML[yet another markup lang] format.
+
+--> default file name docker-compose.yaml or docker-compose.yml or compose.yaml or compose.yml
+
+EX: spring boot app with mongo db
+
+
+docker run -d --name springapp --network jio -p 8080:8080 -e MONGO_DB_HOSTNAME=mongo -e MONGO_DB_USERNAME=devdb -e MONGO_DB_PASSWORD=dev@123 kkeducationb2/springimage
+
+docker run -d --name mongo -v jiovolume:/data/db --network jio -e MONGO_INITDB_ROOT_USERNAME=devdb -e MONGO_INITDB_ROOT_PASSWORD=dev@123 mongo
+
+
+IQ] app or DB we need to down first?
+
+ans:
+
+How to write docker compose file?
+=================================
+
+version:
+services:
+volumes:
+networks:
+
+
+
+EX:
+---
+
+version: "3"
+services:
+  springapp:
+    image: kkeducationb2/springimage
+    ports:
+    - 8080:8080
+    depends_on:
+    - mongo
+    networks:
+    - jio
+    environment:
+    - MONGO_DB_HOSTNAME=mongo
+    - MONGO_DB_USERNAME=devdb
+    - MONGO_DB_PASSWORD=dev@123
+  mongo:
+    image: mongo
+    networks:
+    - jio
+    environment: 
+    - MONGO_INITDB_ROOT_USERNAME=devdb
+    - MONGO_INITDB_ROOT_PASSWORD=dev@123
+    volumes:
+    - jiovolume:/data/db
+networks:
+ jio:
+  driver: bridge
+volumes:
+  jiovolume:
+  
+
+
+How to save a file?
+-------------------
+
+docker-compose.yaml
+
+How to see the version?
+-----------------------
+
+docker-compose version
+
+
+How to install docker-compose?
+------------------------------
+
+sudo apt install docker-compose
+
+How to check the syntax?
+------------------------
+docker-compose config
+
+
+How to run docker-compose?
+---------------------------
+
+docker-compose up -d
+
+
+how to stop ?
+-------------
+docker-compose down 
+
+
+How to see containers?
+----------------------
+
+docker-compose ps
+
+How to see the images?
+----------------------
+
+docker-compose images
+
+
